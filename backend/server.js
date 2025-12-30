@@ -4,6 +4,8 @@ const app = express();
 app.use(express.json());
 
 const cors = require("cors");
+app.use(cors());
+
 const userRoutes =  require("./routes/userRoutes.js")
 const productRoutes =  require("./routes/productRoutes.js")
 const cartRoutes = require('./routes/cartRoutes.js');
@@ -25,7 +27,6 @@ const connectDB = require("./config/db");
 // Allows the app to parse JSON bodies in requests
 
 
-// Enables Cross-Origin Resource Sharing (CORS)
 app.use(cors());
 
 dotenv.config();
