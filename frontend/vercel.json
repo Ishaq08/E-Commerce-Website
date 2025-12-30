@@ -1,0 +1,16 @@
+{
+    "version": 2,
+    "bulids": [
+        {
+            "src": "package.json",
+            "use": "@vercel/static-bulid",
+            "config": {"disDir": "dist"}
+        }
+    ],
+    "rewrites": [
+        {
+            "src": "/(.*)",
+            "destination": "/"
+        }
+    ]
+}
