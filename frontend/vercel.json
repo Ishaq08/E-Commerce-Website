@@ -3,13 +3,15 @@
     "builds": [
         {
             "src": "package.json",
-            "use": "@vercel/static-bulid",
-            "config": {"disDir": "dist"}
+            "use": "@vercel/static-build",
+            "config": {
+                "distDir": "dist"
+            }
         }
     ],
     "rewrites": [
         {
-            "src": "/(.*)",
+            "source": "/(.*)",
             "destination": "/"
         }
     ]
