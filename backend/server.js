@@ -27,7 +27,16 @@ const connectDB = require("./config/db");
 // Allows the app to parse JSON bodies in requests
 
 
-app.use(cors());
+// app.use(cors());
+app.use(
+  cors({
+    origin: 'https://e-commerce-website-gz4b.vercel.app',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    credentials: true,
+  })
+);
+app.options('*', cors());
+
 
 dotenv.config();
 
@@ -53,7 +62,9 @@ app.use('/api/admin/products', productAdminRoute);
 app.use('/api/admin/order', orderAdminRoute);
 
 // 6. Start the server
-app.listen(PORT, () => {
-    // Log a message to the console when the server starts
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+// app.listen(PORT, () => {
+//     // Log a message to the console when the server starts
+//     console.log(`Server is running on http://localhost:${PORT}`);
+// });
+
+module.exports = app;
