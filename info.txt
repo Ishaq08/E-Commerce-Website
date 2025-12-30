@@ -1,4 +1,0 @@
-piscum.photos api for images
-
-npm i sonner :- for notifications
-npm i @paypal/react-paypal-js
