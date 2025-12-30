@@ -1,0 +1,4 @@
+- [x] Update Home.jsx to display best sellers using ProductGrid instead of ProductDetails
+- [x] Fix typo in Best Seller heading className from "textmb-3xl" to "text-3xl"
+- [x] Change loading text to "Loading Best Seller Products" for accuracy
+- [x] Rename state variable from bestSellerProduct to bestSellerProducts for clarity

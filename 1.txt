@@ -1,0 +1,761 @@
+import React, { useState } from 'react';
+
+import { useNavigate } from 'react-router-dom';
+
+import PayPalButton from './PayPalButton'; // Assuming PayPalButton.jsx is in the same directory
+
+
+
+// Sample cart data (from previous context)
+
+const cart = {
+
+  products: [
+
+    {
+
+      name: "Stylish Jacket",
+
+      size: "M",
+
+      color: "Black",
+
+      price: 120, // Use number for calculations
+
+      image: "https://picsum.photos/150?random=1"
+
+    },
+
+    {
+
+      name: "Casual Sneakers",
+
+      size: "42",
+
+      color: "White",
+
+      price: 75, // Use number for calculations
+
+      image: "https://picsum.photos/150?random=2"
+
+    },
+
+  ],
+
+  totalPrice: 195, // Use number for calculations
+
+};
+
+
+
+const Checkout = () => {
+
+  const navigate = useNavigate();
+
+ 
+
+  // State for checkout ID (used to conditionally display the PayPal button)
+
+  const [checkoutId, setCheckoutId] = useState(null);
+
+
+
+  // Shipping address state
+
+  const [shippingAddress, setShippingAddress] = useState({
+
+    firstName: "",
+
+    lastName: "",
+
+    address: "",
+
+    city: "",
+
+    postalCode: "",
+
+    country: "",
+
+    phone: "",
+
+  });
+
+
+
+  // 1. Generic handler for updating shipping address fields
+
+  const handleShippingChange = (e) => {
+
+    const { name, value } = e.target;
+
+    setShippingAddress(prevAddress => ({
+
+      ...prevAddress,
+
+      [name]: value,
+
+    }));
+
+  };
+
+
+
+  // 2. Handler when the user submits the Shipping Form
+
+  const handleCreateCheckout = (e) => {
+
+    e.preventDefault();
+
+    setCheckoutId(123);
+
+  };
+
+
+
+  // 3. Handler for successful PayPal payment
+
+  const handlePaymentSuccess = (details) => {
+
+    console.log("Payment Successful!", details);
+
+    // After success, navigate to the order confirmation page
+
+    navigate("/order-confirmation");
+
+  };
+
+
+
+  // 4. Handler for PayPal errors
+
+  const handlePaymentError = (err) => {
+
+    console.error("Payment failed:", err);
+
+    alert("Payment failed. Try again.");
+
+  };
+
+
+
+  return (
+
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto py-10 px-6 tracking-tighter">
+
+
+
+      {/* Left Section: Checkout Form */}
+
+      <div className="bg-white rounded-lg p-6">
+
+        <h2 className="text-2xl uppercase mb-6">Checkout</h2>
+
+
+
+        <form onSubmit={handleCreateCheckout}>
+
+          {/* Contact Details (Email) - Reconstructed from previous step */}
+
+          <h3 className="text-lg mb-4">Contact Details</h3>
+
+          <div className="mb-4">
+
+            <label className="block text-gray-700">Email</label>
+
+            <input
+
+              type="email"
+
+              value="user@example.com"
+
+              className="w-full p-2 border rounded"
+
+              readOnly // Assuming this is pre-filled/read-only
+
+            />
+
+          </div>
+
+
+
+          {/* Delivery/Shipping Address Form (Reconstructed from previous step) */}
+
+          <h3 className="text-lg mb-4">Delivery</h3>
+
+         
+
+          <div className="grid grid-cols-2 gap-4">
+
+            <div className="mb-4">
+
+              <label className="block text-gray-700">First Name</label>
+
+              <input type="text" name="firstName" value={shippingAddress.firstName} onChange={handleShippingChange} className="w-full p-2 border rounded" required />
+
+            </div>
+
+            <div className="mb-4">
+
+              <label className="block text-gray-700">Last Name</label>
+
+              <input type="text" name="lastName" value={shippingAddress.lastName} onChange={handleShippingChange} className="w-full p-2 border rounded" required />
+
+            </div>
+
+          </div>
+
+
+
+          <div className="mb-4">
+
+            <label className="block text-gray-700">Address</label>
+
+            <input type="text" name="address" value={shippingAddress.address} onChange={handleShippingChange} className="w-full p-2 border rounded" required />
+
+          </div>
+
+
+
+          <div className="grid grid-cols-2 gap-4">
+
+            <div className="mb-4">
+
+              <label className="block text-gray-700">City</label>
+
+              <input type="text" name="city" value={shippingAddress.city} onChange={handleShippingChange} className="w-full p-2 border rounded" required />
+
+            </div>
+
+            <div className="mb-4">
+
+              <label className="block text-gray-700">Postal Code</label>
+
+              <input type="text" name="postalCode" value={shippingAddress.postalCode} onChange={handleShippingChange} className="w-full p-2 border rounded" required />
+
+            </div>
+
+          </div>
+
+
+
+          <div className="mb-4">
+
+            <label className="block text-gray-700">Country</label>
+
+            <input type="text" name="country" value={shippingAddress.country} onChange={handleShippingChange} className="w-full p-2 border rounded" required />
+
+          </div>
+
+
+
+          <div className="mb-4">
+
+            <label className="block text-gray-700">Phone</label>
+
+            <input type="tel" name="phone" value={shippingAddress.phone} onChange={handleShippingChange} className="w-full p-2 border rounded" required />
+
+          </div>
+
+
+
+          {/* Payment Section (Conditional rendering based on checkoutId) */}
+
+          <div className="mt-6">
+
+            {/* If checkoutId is set, show PayPal button. Otherwise, show "Continue to Payment" button */}
+
+            {checkoutId ? (
+
+              <div>
+
+                <h3 className="text-lg mb-4">Pay with Paypal</h3>
+
+                <PayPalButton
+
+                  amount={100}
+
+                  onSuccess={handlePaymentSuccess}
+
+                  onError={handlePaymentError}
+
+                />
+
+              </div>
+
+            ) : (
+
+              <button
+
+                type="submit"
+
+                className="w-full bg-black text-white py-3 rounded"
+
+              >
+
+                Continue to Payment
+
+              </button>
+
+            )}
+
+          </div>
+
+        </form>
+
+      </div>
+
+
+
+      {/* Right Section: Order Summary (lines 195-231) */}
+
+      <div className="bg-gray-50 rounded-lg p-6 h-fit sticky top-10">
+
+        <h3 className="text-lg mb-4">Order Summary</h3>
+
+
+
+        {/* Product List */}
+
+        <div className="border-t py-4 mb-4">
+
+          {cart.products.map((product, index) => (
+
+            <div key={index} className="flex items-start justify-between py-2 border-b">
+
+              {/* Product Details Left */}
+
+              <div className="flex items-start">
+
+                <img
+
+                  src={product.image}
+
+                  alt={product.name}
+
+                  className="w-20 h-24 object-cover mr-4"
+
+                />
+
+                <div>
+
+                  <h3 className="text-md">{product.name}</h3>
+
+                  <p className="text-gray-500 text-sm">Size: {product.size}</p>
+
+                  <p className="text-gray-500 text-sm">Color: {product.color}</p>
+
+                </div>
+
+              </div>
+
+              {/* Product Price Right */}
+
+              <p className="text-xl">
+
+                ${product.price?.toLocaleString()}
+
+              </p>
+
+            </div>
+
+          ))}
+
+        </div>
+
+
+
+        {/* Subtotal */}
+
+        <div className="flex justify-between items-center text-lg mb-4">
+
+          <p>Subtotal</p>
+
+          <p>${cart.totalPrice?.toLocaleString()}</p>
+
+        </div>
+
+       
+
+        {/* Shipping */}
+
+        <div className="flex justify-between items-center text-lg">
+
+          <p>Shipping</p>
+
+          <p>Free</p>
+
+        </div>
+
+       
+
+        {/* Total */}
+
+        <div className="flex justify-between items-center text-lg border-t mt-4 pt-4">
+
+          <p className="font-bold">Total</p>
+
+          <p className="font-bold">${cart.totalPrice?.toLocaleString()}</p>
+
+        </div>
+
+       
+
+      </div>
+
+    </div>
+
+  );
+
+};
+
+
+
+export default Checkout; // PayPalButton.jsx
+
+import React from 'react';
+
+import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
+
+
+
+// Define onError for consistency with the usage in Checkout.jsx
+
+const onError = (err) => {
+
+  console.error('PayPal Error:', err);
+
+  alert('Payment failed. Try again.');
+
+};
+
+
+
+const PayPalButton = ({ amount, onSuccess, onError }) => {
+
+  // Client ID taken from the image
+
+  const clientID =
+
+    'Aff0MVZQFWUI0GQRgyujHPoYCGnwtd4IOXAtGYA2Esw092jrt-rYNRphu23IXjFp47IKSwZ29-r9E';
+
+
+
+  return (
+
+    <PayPalScriptProvider options={{ 'client-id': clientID }}>
+
+      <PayPalButtons
+
+        style={{ layout: "vertical" }}
+
+        createOrder={(data, actions) => {
+
+          return actions.order.create({
+
+            purchase_units: [
+
+              {
+
+                amount: {
+
+                  value: amount.toString(), // Ensure amount is passed as a string
+
+                },
+
+              },
+
+            ],
+
+          });
+
+        }}
+
+        onApprove={(data, actions) => {
+
+          // Capture the payment and then call the custom onSuccess handler
+
+          return actions.order.capture().then((details) => {
+
+            onSuccess(details);
+
+          });
+
+        }}
+
+        onError={onError} // Pass down the custom error handler
+
+      />
+
+    </PayPalScriptProvider>
+
+  );
+
+};
+
+
+
+export default PayPalButton;
+
+// Sample checkout data (as seen in the first image)
+
+const checkout = {
+
+  product: [
+
+    {
+
+      productId: '2',
+
+      name: 'T-shirt',
+
+      color: 'black',
+
+      size: 'M',
+
+      price: 120,
+
+      quantity: 2,
+
+      image: 'https://picsum.photos/150?random=1',
+
+    },
+
+    {
+
+      productId: '1',
+
+      name: 'Jacket',
+
+      color: 'black',
+
+      size: 'M',
+
+      price: 150,
+
+      quantity: 1,
+
+      image: 'https://picsum.photos/150/?random=2',
+
+    },
+
+  ],
+
+  shippingAddress: {
+
+    address: '123 Fashion Street',
+
+    city: 'New York',
+
+    country: 'USA',
+
+  },
+
+
+
+  _id: 'ORD-987654321',
+
+  orderDate: new Date().toLocaleDateString('en-US'),
+
+};
+
+
+
+const OrderConfirmationPage = () => {
+
+  return (
+
+    <div className="OrderConfirmationPage">
+
+      <div className="max-w-4xl mx-auto p-6 bg-white">
+
+        <h1 className="text-4xl font-bold text-center text-emerald-700 mb-8">
+
+          Thank You For Your Order!
+
+        </h1>
+
+
+
+        {checkout && (
+
+          <div className="p-6 rounded-lg border">
+
+         
+
+
+
+            <div className="flex justify-between mb-20">
+
+              <div>
+
+                <h2 className="text-xl font-semibold">
+
+                  Order ID: **{checkout._id}**
+
+                </h2>
+
+                <p className="text-lg text-gray-600">
+
+                  Order Date: {checkout.orderDate}
+
+                </p>
+
+              </div>
+
+
+
+             <div>
+
+                <h2 className="text-xl font-semibold">
+
+                    Estimated Delivery:
+
+                </h2>
+
+                <p className="text-lg text-gray-600">
+
+                    5-7 Business Days
+
+                </p>
+
+              </div>
+
+            </div>
+
+
+
+            {/* --- Product Details Section --- */}
+
+            <h3 className="text-2xl font-bold mb-4 border-b pb-2">
+
+              Order Summary
+
+            </h3>
+
+
+
+            {/* Assuming product is an array, we map over it */}
+
+            {checkout.product.map((item, index) => (
+
+              <div
+
+                key={index}
+
+                className="flex items-center space-x-4 py-4 border-b"
+
+              >
+
+                {/* Product Image */}
+
+                <img
+
+                  src={item.image}
+
+                  alt={item.name}
+
+                  className="w-16 h-16 object-cover rounded-md"
+
+                />
+
+
+
+                {/* Product Info */}
+
+                <div className="flex-grow">
+
+                  <p className="font-semibold">{item.name}</p>
+
+                  <p className="text-sm text-gray-500">
+
+                    Color: {item.color}, Size: {item.size}
+
+                  </p>
+
+                </div>
+
+
+
+                {/* Quantity and Price */}
+
+                <div className="text-right">
+
+                  <p className="font-medium">Qty: {item.quantity}</p>
+
+                  <p className="font-bold text-lg">
+
+                    ${item.price * item.quantity}
+
+                  </p>
+
+                </div>
+
+              </div>
+
+            ))}
+
+
+
+            {/* --- Shipping Address Section --- */}
+
+            <h3 className="text-2xl font-bold mt-8 mb-4 border-b pb-2">
+
+              Shipping Address
+
+            </h3>
+
+            <div className="text-lg">
+
+              <p>{checkout.shippingAddress.address}</p>
+
+              <p>
+
+                {checkout.shippingAddress.city},{' '}
+
+                {checkout.shippingAddress.country}
+
+              </p>
+
+            </div>
+
+
+
+            {/* --- Total/Payment Info (Placeholder) --- */}
+
+            <div className="mt-8 pt-4 border-t text-right">
+
+              <p className="text-xl font-bold">Total Paid: $240</p>
+
+              <p className="text-sm text-gray-500">
+
+                Payment Method: PayPal (Assumed from one of the file tabs)
+
+              </p>
+
+            </div>
+
+          </div>
+
+        )}
+
+
+
+        {/* Fallback for missing checkout data */}
+
+        {!checkout && (
+
+          <p className="text-center text-red-500">
+
+            Order details could not be loaded.
+
+          </p>
+
+        )}
+
+      </div>
+
+    </div>
+
+  );
+
+};
